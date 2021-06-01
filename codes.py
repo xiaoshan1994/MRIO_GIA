@@ -182,6 +182,12 @@ else :
     for i in range(0,5) :
         print("Top", i+1, label_r[rank[i]],"(country index =", rank[i], "),","CO2 =", cba_r_sorted[i, 0],"Mt;")
 
-
+#%%
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
 
 cbs_rs_fp = pd.DataFrame(cba_rs[:,0:17], index= label_r, columns= label_s[0:17])
+ax = sns.heatmap(cbs_rs_fp,vmin=0, vmax=0.5, cmap="YlGnBu",yticklabels=True)
+
+#%%
