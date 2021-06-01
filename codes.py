@@ -182,10 +182,11 @@ else :
     for i in range(0,5) :
         print("Top", i+1, label_r[rank[i]],"(country index =", rank[i], "),","CO2 =", cba_r_sorted[i, 0],"Mt;")
 
-#%%
+#%% Heatmap of UK's food production CO2 emissions and its outsourcing countries. 
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
+
 fig= plt.figure(figsize=(15,15))
 sns.set_theme(rc={'ytick.labelsize':12,'xtick.labelsize':10})
 cbs_rs_fp = pd.DataFrame(cba_rs[:,0:17], index= label_r, columns= label_s[0:17])
@@ -194,3 +195,31 @@ plt.setp(fig.get_xticklabels(), rotation=15, ha="right", rotation_mode="anchor")
 fig.set_title(" Consumption-based CO2 emissions in UK's food production sectors (2011, MtCO2)")
 plt.savefig('/Users/hp/OneDrive - Universiteit Leiden/4. Leiden Univ/2021-WN EIOA course by Ranran/IGA/kai1.svg',dpi=300)
 #%%
+import numpy as np
+import matplotlib.pyplot as plt
+n_points = 17
+cba_rs_fp= cba_rs[:,0:17].sum(1) 
+cba_rs_fp_eu=cba_rs[0:27,0:17].sum(0) 
+cba_rs_fp_uk=cba_rs[27,0:17]
+cba_rs_fp_rw=cba_rs[28:49,0:17].sum(0) 
+x_max = 17
+x_coords = np.linspace(0, x_max, n_points, endpoint=False)
+width = 1
+plt.figure(figsize=(10, 10))
+ax = plt.subplot(111)
+ax.bar(
+    x_coords,
+    cba_rs_fp_uk,
+    width=width
+)
+ax.bar(
+    x_coords,
+   cba_rs_fp_eu,
+    width=width
+)
+bars = ax.bar(
+    x_coords,
+    cba_rs_fp_rw,
+    width=width
+)
+plt.show()
