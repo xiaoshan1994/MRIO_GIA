@@ -70,7 +70,7 @@ f_co2 = np.nan_to_num(f_co2, copy=False, nan=0.0, posinf=0.0, neginf=0.0)       
 # change to choose different region: c in 0 to 48
 # position 20 is Netherlands
 # explore mrio['label']['region'] to find others
-c = 20
+c = 27
 
 # To locate country columns or rows in A and L: 'c*ns : (c+1)*ns'
 # To locate country columns in Y: 'c*ny : (c+1)*ny'
@@ -186,8 +186,11 @@ else :
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-
+fig= plt.figure(figsize=(15,15))
+sns.set_theme(rc={'ytick.labelsize':12,'xtick.labelsize':10})
 cbs_rs_fp = pd.DataFrame(cba_rs[:,0:17], index= label_r, columns= label_s[0:17])
-ax = sns.heatmap(cbs_rs_fp,vmin=0, vmax=0.5, cmap="YlGnBu",yticklabels=True)
-
+fig = sns.heatmap(cbs_rs_fp,vmin=0, vmax=0.5, cmap="YlGnBu",yticklabels=True, linewidths=.8)
+plt.setp(fig.get_xticklabels(), rotation=15, ha="right", rotation_mode="anchor")
+fig.set_title(" Consumption-based CO2 emissions in UK's food production sectors (2011, MtCO2)")
+plt.savefig('/Users/hp/OneDrive - Universiteit Leiden/4. Leiden Univ/2021-WN EIOA course by Ranran/IGA/kai1.svg',dpi=300)
 #%%
