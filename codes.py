@@ -192,18 +192,18 @@ sns.set_theme(rc={'ytick.labelsize':12,'xtick.labelsize':10})
 cbs_rs_fp = pd.DataFrame(cba_rs[:,0:17], index= label_r, columns= label_s[0:17])
 fig = sns.heatmap(cbs_rs_fp,vmin=0, vmax=0.5, cmap="YlGnBu",yticklabels=True, linewidths=.8)
 plt.setp(fig.get_xticklabels(), rotation=15, ha="right", rotation_mode="anchor")
-fig.set_title(" Consumption-based CO2 emissions in UK's food production sectors (2011, MtCO2)")
+fig.set_title(" Consumption-based CO2 emissions in UK agricultural production sectors (2011, MtCO2)")
 plt.savefig('/Users/hp/OneDrive - Universiteit Leiden/4. Leiden Univ/2021-WN EIOA course by Ranran/IGA/kai1.svg',dpi=300)
 #%%
 import numpy as np
 import matplotlib.pyplot as plt
-n_points = 17
+
 cba_rs_fp= cba_rs[:,0:17].sum(1) 
 cba_rs_fp_eu=cba_rs[0:27,0:17].sum(0) 
 cba_rs_fp_uk=cba_rs[27,0:17]
 cba_rs_fp_rw=cba_rs[28:49,0:17].sum(0) 
 x_max = 17
-x_coords = np.linspace(0, x_max, n_points, endpoint=False)
+x_coords = np.linspace(1, x_max, num=17, endpoint=False)
 width = 1
 plt.figure(figsize=(10, 10))
 ax = plt.subplot(111)
@@ -222,4 +222,10 @@ bars = ax.bar(
     cba_rs_fp_rw,
     width=width
 )
+plt.yticks([0.5,1,1.5,2,2.5,3,3.5])
+plt.xticks(np.arange(1, 18, step=1))
+ax.set_xticklabels(label_s[0:17])
+plt.setp(ax.get_xticklabels(), rotation=25, horizontalalignment='right')
+plt.legend(loc = "upper right")                          # Lable the plot (check tutorial link above)                 
+plt.title('Main CO2 outsouring regions of UK agricultural production sectors (2011, MtCO2)')
 plt.show()
