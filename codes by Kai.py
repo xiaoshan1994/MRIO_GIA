@@ -22,7 +22,7 @@ np.set_printoptions(precision=2)
 # (run os.getcwd() to find out what that is)
 # Folder to read MRIO from
 os.getcwd()
-mrio_dir = Path("/Users/hp/OneDrive - Universiteit Leiden/4. Leiden Univ/2021-WN EIOA course by Ranran/IGA")  # Fill " " with your working directory path
+mrio_dir = Path("C:\\Users\\lik6\\OneDrive - Universiteit Leiden\\4. Leiden Univ\\2021-WN EIOA course by Ranran\\IGA")  # Fill " " with your working directory path
 ## for home PC:"/Users/hp/OneDrive - Universiteit Leiden/4. Leiden Univ/2021-WN EIOA course by Ranran/IGA
 ##  for office PC "C:\\Users\\lik6\\OneDrive - Universiteit Leiden\\4. Leiden Univ\\2021-WN EIOA course by Ranran\\IGA"
 ##############################################
@@ -129,6 +129,7 @@ pba_s_sorted[:,0] = np.flip(pba_s_sorted[:,0])                                  
 pba_s_sorted[:,1] = pba_s_sorted[:,0]/pba[0,2]*100                                  # percentage contribution
 pba_s_sorted[:,2] = np.cumsum(pba_s_sorted[:,1])                                    # cumulative percentage contribution
 pba_s_sorted = np.around(pba_s_sorted,3)                                            # evenly round to 3 decimals
+
 # sector names of the top 5 emitters
 for i in range(0,5) :
         print("Top", i+1, label_s[rank[i]],"(sector index =", rank[i], "),","CO2 =", pba_s_sorted[i, 0],"Mt;")
@@ -181,6 +182,46 @@ if c in rank[0:5] :
 else :
     for i in range(0,5) :
         print("Top", i+1, label_r[rank[i]],"(country index =", rank[i], "),","CO2 =", cba_r_sorted[i, 0],"Mt;")
+
+#%% Changes in final demand with the processed beef sector (PB)
+y_UK = Y[:, c*ny : (c+1)*ny].sum(1)  
+
+# Assuming the p_a percentage of reduction of PB in UK's domestic fimal demand after the Brexit.
+p_a = 0.1
+y_AB_UK = (1-p_a)*(y_UK[ns*c:ns*(c+1)].sum())
+
+# Assuming the p_b(%) percentage of reduction of PB exports from EU27 to UK after the Brexit.
+p_b = 0.3
+
+    # Specifying the postion of PB in the product list of the EXIOBASE 
+kpb = 42
+y_AB_EU = 0 
+
+for i in range(27):
+    y_AB_EU += (1-p_b)*y_UK[ns*i+kpb]
+
+# Assuming the p_c(%) percentage of increase of PB exports from Australia to UK after the free tariff agreement.
+p_c = 0.4
+
+    # Specifying the position of Australia in the country list.
+AU = 37
+
+y_AB_AU = (1-p_c)*(y_UK[ns*AU:ns*(AU+1)].sum())
+
+print("UK's domestic fimal demand for PB:",np.around(y_AB_UK,3), "M.EUR")
+print("PB exports from EU27 to UK:",np.around(y_AB_EU,3), "M.EUR")
+print("PB exports from Australia to UK:",np.around(y_AB_AU,3), "M.EUR")
+
+#%% Changes in co2 emissions and water used 
+
+label_s = list(mrio['label']['product']['Name']) + ['Household direct']
+cba_hh = H_co2[c*ny : (c+1)*ny].sum() *conv 
+cba_s = f_co2 @ L @ np.diag(y)*conv
+cba_rs = np.reshape(cba_s,(nr,ns))                                                  # pay attention to get the new shape dimension right
+cba_s = cba_rs.sum(0)                                                               # by final demand sector
+cba_s = np.append(cba_s,cba_hh)                                                   # append household direct emissions to the end
+cba_r = cba_rs.sum(1)                                                               # by emitting regions
+cba_r[c] = cba_r[c] + cba_hh                                                     # add HH direct emissions
 
 #%% Consumption-based CO2 emissions in UK agricultural production sectors (2011, MtCO2)
 import seaborn as sns
