@@ -17,20 +17,13 @@ from pathlib import Path
 np.set_printoptions(precision=2)
 
 ##############################################
-# TASK 1: Load MRIO from Pickle
-# Folder settings: Change the current working directory to reflect the location in your computer
-# (run os.getcwd() to find out what that is)
-# Folder to read MRIO from
+# Load the pickle of Exiobase V3.8.1(2020)
+
 os.getcwd()
-mrio_dir = Path("C:\\Users\\lik6\\OneDrive - Universiteit Leiden\\4. Leiden Univ\\2021-WN EIOA course by Ranran\\IGA")  # Fill " " with your working directory path
-## for home PC:"/Users/hp/OneDrive - Universiteit Leiden/4. Leiden Univ/2021-WN EIOA course by Ranran/IGA
-##  for office PC "C:\\Users\\lik6\\OneDrive - Universiteit Leiden\\4. Leiden Univ\\2021-WN EIOA course by Ranran\\IGA"
-##############################################
-# Load MRIO
+mrio_dir = Path('OneDrive - Universiteit Leiden/4. Leiden Univ/2021-WN EIOA course by Ranran/IGA')  # Fill " " with your working directory path
 
 tstart = time.time()
-
-mrio_name = 'mrio.pkl'
+mrio_name = 'mrio_y2020.pkl'
 mrio_str = mrio_dir.joinpath(mrio_name)
 pkl_in = open(mrio_str,"rb")                                                        # 'open' the mrio.pkl file
 mrio = pkl.load(pkl_in)                                                             # load the mrio.pkl file to mrio
@@ -38,47 +31,50 @@ pkl_in.close()
 
 tend = time.time()
 print('Done reading in %5.2f s\n'% (tend - tstart))
-
+#%%
+##############################################
 # category counts
 
 nr = mrio['label']['region'].count()[0]
 ns = mrio['label']['product'].count()[0]
 ny = mrio['label']['final'].count()[0]
 
+##############################################
 # MRIO matrix/vector variables
 L = mrio['L']
 Y = mrio['Y']
 V = mrio['V']
 F = mrio['F']
 F_co2 = mrio['F_co2']
+F_wc = mrio['F_wc']
 H = mrio['H']
 H_co2 = mrio['H_co2']
+H_wc = mrio['H_wc']
 
-
+##############################################
 # calculate total output
 x = L @ Y.sum(1)
 
-# calculate direct emissions intensity
-f_co2 = F_co2/x                                                                     # resulting in na or inf when x = 0
-f_co2 = np.nan_to_num(f_co2, copy=False, nan=0.0, posinf=0.0, neginf=0.0)           # replace na and inf with 0
-
 ##############################################
+# calculate direct co2 emission intensity and direct water consumption intensity
+f_co2 = F_co2/x                                                                   # resulting in na or inf when x = 0
+f_co2 = np.nan_to_num(F_co2/x, copy=False, nan=0.0, posinf=0.0, neginf=0.0)       # replace na and inf with 0
+
+f_wc = F_wc/x                                                                     # resulting in na or inf when x = 0
+f_wc = np.nan_to_num(f_wc, copy=False, nan=0.0, posinf=0.0, neginf=0.0)           # replace na and inf with 0
+
 ##############################################
 # Configuration for all following tasks
+# position 27 is UK
 
-
-# change to choose different region: c in 0 to 48
-# position 20 is Netherlands
-# explore mrio['label']['region'] to find others
 c = 27
 
 # To locate country columns or rows in A and L: 'c*ns : (c+1)*ns'
 # To locate country columns in Y: 'c*ny : (c+1)*ny'
 
-# convert units from kg to Mt (*1e-9)
+# convert units from kg to Mt (*1e-9,co2) and Mm3 to (, water consumption)
 conv = 1e-9
 
-##############################################
 ##############################################
 # TASK 2. Calculate territorial emissions for a specific country
 
@@ -184,18 +180,19 @@ else :
         print("Top", i+1, label_r[rank[i]],"(country index =", rank[i], "),","CO2 =", cba_r_sorted[i, 0],"Mt;")
 
 #%% Changes in final demand with the processed beef sector (PB)
-y_UK = Y[:, c*ny : (c+1)*ny].sum(1)  
+# final demand of the UK in 2020
+y_UK = Y[:, c*ny : (c+1)*ny].sum(1)
 
-# Assuming the p_a percentage of reduction of PB in UK's domestic fimal demand after the Brexit.
+# Assuming the p_a percentage of reduction of PB in UK's domestic final demand after the Brexit.
 p_a = 0.1
 y_AB_UK = (1-p_a)*(y_UK[ns*c:ns*(c+1)].sum())
 
 # Assuming the p_b(%) percentage of reduction of PB exports from EU27 to UK after the Brexit.
 p_b = 0.3
 
-    # Specifying the postion of PB in the product list of the EXIOBASE 
-kpb = 42
-y_AB_EU = 0 
+    # Specifying the postion of PB in the product list of the EXIOBASE
+kpb = 43
+y_AB_EU = 0
 
 for i in range(27):
     y_AB_EU += (1-p_b)*y_UK[ns*i+kpb]
@@ -212,10 +209,10 @@ print("UK's domestic fimal demand for PB:",np.around(y_AB_UK,3), "M.EUR")
 print("PB exports from EU27 to UK:",np.around(y_AB_EU,3), "M.EUR")
 print("PB exports from Australia to UK:",np.around(y_AB_AU,3), "M.EUR")
 
-#%% Changes in co2 emissions and water used 
+#%% Changes in co2 emissions and water used
 
 label_s = list(mrio['label']['product']['Name']) + ['Household direct']
-cba_hh = H_co2[c*ny : (c+1)*ny].sum() *conv 
+cba_hh = H_co2[c*ny : (c+1)*ny].sum() *conv
 cba_s = f_co2 @ L @ np.diag(y)*conv
 cba_rs = np.reshape(cba_s,(nr,ns))                                                  # pay attention to get the new shape dimension right
 cba_s = cba_rs.sum(0)                                                               # by final demand sector
@@ -241,10 +238,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 fig, ax = plt.subplots(figsize=(10,10))
-cba_rs_fp= cba_rs[:,0:17].sum(1) 
-cba_rs_fp_eu=cba_rs[0:27,0:17].sum(0) 
+cba_rs_fp= cba_rs[:,0:17].sum(1)
+cba_rs_fp_eu=cba_rs[0:27,0:17].sum(0)
 cba_rs_fp_uk=cba_rs[27,0:17]
-cba_rs_fp_rw=cba_rs[28:49,0:17].sum(0) 
+cba_rs_fp_rw=cba_rs[28:49,0:17].sum(0)
 x_max = 17
 x_coords = np.linspace(1, x_max, num=17, endpoint=False)
 width = 1
@@ -269,7 +266,7 @@ plt.yticks([0.5,1,1.5,2,2.5,3,3.5])
 plt.xticks(np.arange(1, 18, step=1))
 ax.set_xticklabels(label_s[0:17])
 plt.setp(ax.get_xticklabels(), rotation=25, horizontalalignment='right')
-plt.legend(loc = "upper right")                          # Lable the plot (check tutorial link above)                 
+plt.legend(loc = "upper right")                          # Lable the plot (check tutorial link above)
 plt.title('Main CO2 outsouring regions of UK agricultural production sectors (2011, MtCO2)')
 plt.savefig('/Users/hp/OneDrive - Universiteit Leiden/4. Leiden Univ/2021-WN EIOA course by Ranran/IGA/cba_rs_fp_main.png',dpi=300)
 plt.show()
