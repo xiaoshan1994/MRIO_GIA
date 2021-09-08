@@ -75,7 +75,53 @@ c = 27
 # convert units from kg to Mt (*1e-9,co2) and Mm3 to (, water consumption)
 conv = 1e-9
 
+#%% Changes in final demand with the processed beef sector (PB)
 ##############################################
+# final demand of the UK in 2020
+y_uk = Y[:, c*ny : (c+1)*ny].sum(1)
+
+# Assuming the p_a percentage of reduction of PB in UK's domestic final demand after the Brexit.
+p_a = 0.1
+kpb = 42
+uk_red = p_a*y_uk[(ns*c+kpb)] 
+y_uk[ns*c+kpb] = (1-p_a)*y_uk[ns*c+kpb]                                       # Specifying the postion of PB in the product list of the EXIOBASE
+print("UK's domestic final demand reduction for PB:", uk_red, "M.EUR")
+
+# Assuming the p_b(%) percentage of reduction of PB exports from EU27 to UK after the Brexit.
+p_b = 0.3
+y_AB_EU = 0
+
+for i in range(27):
+    
+    y_AB_EU += (1-p_b)*y_UK[ns*i+kpb]
+
+# Assuming the p_c(%) percentage of increase of PB exports from Australia to UK after the free tariff agreement.
+p_c = 0.4
+
+# Specifying the position of Australia in the country list.
+AU = 37
+
+y_AB_AU = (1+p_c)*y_UK[ns*AU+kpb]
+
+print("UK's domestic fimal demand for PB:",np.around(y_AB_UK,3), "M.EUR")
+print("PB exports from EU27 to UK:",np.around(y_AB_EU,3), "M.EUR")
+print("PB exports from Australia to UK:",np.around(y_AB_AU,3), "M.EUR")
+
+#%% Changes in co2 emissions and water used
+
+label_s = list(mrio['label']['product']['Name']) + ['Household direct']
+cba_hh = H_co2[c*ny : (c+1)*ny].sum() *conv
+cba_s = f_co2 @ L @ np.diag(y)*conv
+cba_rs = np.reshape(cba_s,(nr,ns))                                                  # pay attention to get the new shape dimension right
+cba_s = cba_rs.sum(0)                                                               # by final demand sector
+cba_s = np.append(cba_s,cba_hh)                                                   # append household direct emissions to the end
+cba_r = cba_rs.sum(1)                                                               # by emitting regions
+cba_r[c] = cba_r[c] + cba_hh                                                     # add HH direct emissions
+
+#%%
+
+
+
 # TASK 2. Calculate territorial emissions for a specific country
 
 
@@ -185,7 +231,7 @@ y_UK = Y[:, c*ny : (c+1)*ny].sum(1)
 
 # Assuming the p_a percentage of reduction of PB in UK's domestic final demand after the Brexit.
 p_a = 0.1
-y_AB_UK = (1-p_a)*(y_UK[ns*c:ns*(c+1)].sum())
+y_AB_UK = (1-p_a)*(y_UK[ns*c+kpb)].sum())
 
 # Assuming the p_b(%) percentage of reduction of PB exports from EU27 to UK after the Brexit.
 p_b = 0.3
@@ -203,7 +249,7 @@ p_c = 0.4
     # Specifying the position of Australia in the country list.
 AU = 37
 
-y_AB_AU = (1-p_c)*(y_UK[ns*AU:ns*(AU+1)].sum())
+y_AB_AU = (1-p_c)*y_UK[ns*AU+kpb]
 
 print("UK's domestic fimal demand for PB:",np.around(y_AB_UK,3), "M.EUR")
 print("PB exports from EU27 to UK:",np.around(y_AB_EU,3), "M.EUR")
