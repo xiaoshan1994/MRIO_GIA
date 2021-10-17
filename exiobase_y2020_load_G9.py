@@ -19,13 +19,13 @@ tstart = time.time()                                                            
 
 # Folder to store the MRIO data for python
 os.getcwd()
-mrio_dir = Path("C:\\Users\\lik6\\OneDrive - Universiteit Leiden\\4. Leiden Univ\\2021-WN EIOA course by Ranran\\IGA\\IOT_2020_pxp")                                                   # Fill " " with your working directory path 
+mrio_dir = Path('/OneDrive - Universiteit Leiden/4. Leiden Univ/2021-WN EIOA course by Ranran/IGA/IOT_2020_pxp')                                                   # Fill " " with your working directory path 
 
 # Exiobase folder
-exio_dir = Path("C:\\Users\\lik6\\OneDrive - Universiteit Leiden\\4. Leiden Univ\\2021-WN EIOA course by Ranran\\IGA\\IOT_2020_pxp")
+exio_dir = Path('OneDrive - Universiteit Leiden/4. Leiden Univ/2021-WN EIOA course by Ranran/IGA/IOT_2020_pxp')
  
 # Population file folder
-pop_dir = Path("C:\\Users\\lik6\\OneDrive - Universiteit Leiden\\4. Leiden Univ\\2021-WN EIOA course by Ranran\\IGA\\Other data")
+pop_dir = Path('OneDrive - Universiteit Leiden/4. Leiden Univ/2021-WN EIOA course by Ranran/IGA/Other data')
 
 ##############################################
 # Load labels (final demand, product, region, extensions, etc.)
