@@ -100,7 +100,7 @@ cba[:,2] = cba[:,:2].sum()
 cba[:,3] = cba[:,2]/((F_co2.sum()+H_co2.sum())*conv)*100
 
 
-# final demand of the UK in 2020 after the treaty 
+# final demand of the UK in 2020 after the treaty
 y_after = Y[:, c*ny : (c+1)*ny].sum(1)
 au_fd_sum=0                     # final demand moved to Australia export
 #print(y_after[27*200+42])
@@ -130,7 +130,7 @@ for i in range(49):
  #   print(xd)
 
 print("UK's domestic final demand reduction for products of meat cattle:",uk_red, "M.EUR")
-        
+
 print("EU final demand reduction for products of meat cattle:",au_fd_sum, "M.EUR")
 
 au_fd_sum+=uk_red
@@ -142,7 +142,7 @@ y_after[37*200+42] = y_after[37*200+42] + au_fd_sum
 
 print("Products of meat cattle exports from Australia to UK after agreement:",y_after[37*200+42], "M.EUR")
 print()
-#You can see that adding the three first numbers printed gives you the last one: 
+#You can see that adding the three first numbers printed gives you the last one:
 #so no change in the consumption patterns of the world
 
 #%% Identify top-5 sectors that contribute to production-based emissions
@@ -258,9 +258,9 @@ print("Total CBA co2 emissions: ", cba_rs.sum())
 print("Total CBA co2 emissions of processed food products: ", cba_rs_fp.sum())
 print("CBA co2 emissions of products of meat cattle: ", cba_rs_fp[0])
 
-cba_rs_fp_eu=cba_rs[0:27,42:53].sum(0) 
+cba_rs_fp_eu=cba_rs[0:27,42:53].sum(0)
 cba_rs_fp_uk=cba_rs[27,42:53]
-cba_rs_fp_rw=cba_rs[28:49,42:53].sum(0) 
+cba_rs_fp_rw=cba_rs[28:49,42:53].sum(0)
 
 lab1=['UK','EU', 'Rest of the World']
 lab2= label_s[42:53]
@@ -282,18 +282,18 @@ fig, ax = plt.subplots(figsize=(10,10))
 
 
 temp= np.zeros(11)
-for j in range(3):                                      
+for j in range(3):
     plt.bar([1,2,3,4,5,6,7,8,9,10,11], tot[:,j], bottom = temp, label=lab1[j])
     temp = temp + tot[:,j]
 
-plt.legend(loc = "upper right")                          # Lable the plot (check tutorial link above)                 
+plt.legend(loc = "upper right")                          # Lable the plot (check tutorial link above)
 plt.title('Consumption-based co2 emissions in UK processed agricutltural products before Treaty (2020, MtCO2)')
 plt.xticks(np.arange(1,12))
 plt.setp(ax.get_xticklabels(), rotation=30, horizontalalignment='right')
 ax.set_xticklabels(lab2)
 
 plt.rc('font', size=10)          # controls default text sizes
-plt.rc('axes', titlesize=10) 
+plt.rc('axes', titlesize=10)
 
 plt.savefig('co2emissions_UKEURW_processed2020_before_treaty.svg',bbox_inches='tight',pad_inches = 0)
 plt.show()
@@ -337,15 +337,15 @@ else :
         print("Top", i+1, label_r[rank[i]],"(country index =", rank[i], "),","CO2 =", cba_r_sorted[i, 0],"Mt;")
 
 
-cba_rs_fp= cba_rs[:,42:53].sum(0) 
+cba_rs_fp= cba_rs[:,42:53].sum(0)
 print()
 print("Total CBA co2 emissions: ", cba_rs.sum())
 print("Total CBA co2 emissions of processed food products: ", cba_rs_fp.sum())
 print("CBA co2 emissions of products of meat cattle: ", cba_rs_fp[0])
 
-cba_rs_fp_eu=cba_rs[0:27,42:53].sum(0) 
+cba_rs_fp_eu=cba_rs[0:27,42:53].sum(0)
 cba_rs_fp_uk=cba_rs[27,42:53]
-cba_rs_fp_rw=cba_rs[28:49,42:53].sum(0) 
+cba_rs_fp_rw=cba_rs[28:49,42:53].sum(0)
 
 lab1=['UK','EU', 'Rest of the World']
 lab2= label_s[42:53]
@@ -364,18 +364,18 @@ print("CO2 Plot 3: ")
 fig, ax = plt.subplots(figsize=(10,10))
 
 temp= np.zeros(11)
-for j in range(3):                                      
+for j in range(3):
     plt.bar([1,2,3,4,5,6,7,8,9,10,11], tot[:,j], bottom = temp, label=lab1[j])
     temp = temp + tot[:,j]
 
-plt.legend(loc = "upper left")                          # Lable the plot (check tutorial link above)                 
+plt.legend(loc = "upper left")                          # Lable the plot (check tutorial link above)
 plt.title('Consumption-based co2 emissions in UK processed agricutltural products after Treaty (2020, Mm3)')
 plt.xticks(np.arange(1,12))
 plt.setp(ax.get_xticklabels(), rotation=30, horizontalalignment='right')
 ax.set_xticklabels(lab2)
 
 plt.rc('font', size=10)          # controls default text sizes
-plt.rc('axes', titlesize=10) 
+plt.rc('axes', titlesize=10)
 
 plt.savefig('co2emissions_UKEURW_processed2020_after_treaty.svg',bbox_inches='tight',pad_inches = 0)
 plt.show()
@@ -391,7 +391,7 @@ fig, ax = plt.subplots(figsize=(10,10))
 temp= np.zeros(2)
 
 
-for j in range(3):                                      
+for j in range(3):
     plt.bar([1,2], prod_cattle[:,j], bottom = temp, label=lab1[j])
     temp = temp + prod_cattle[:,j]
 
@@ -401,9 +401,9 @@ plt.setp(ax.get_xticklabels(), horizontalalignment='right')
 ax.set_xticklabels(lab3)
 plt.title('Consumption-based CO2 emissions in the UK for products of meat cattle before and after the Treaty (2020, MtCO2)')
 plt.rc('font', size=10)          # controls default text sizes
-plt.rc('axes', titlesize=10) 
+plt.rc('axes', titlesize=10)
 
-plt.legend(loc = "upper right")  
+plt.legend(loc = "upper right")
 
 for rect in ax.patches:
     # Find where everything is located
@@ -411,9 +411,9 @@ for rect in ax.patches:
     width = rect.get_width()
     xx = rect.get_x()
     yy= rect.get_y()
-    
+
     label_text = height
-    
+
     # ax.text(x, y, text)
     label_x = xx + width / 2
     label_y = yy + height / 2
@@ -552,9 +552,9 @@ print("Total CBA water consumption: ", cba_rs.sum())
 print("Total CBA water consumption of processed food products: ", cba_rs_fp.sum())
 print("CBA water consumption of products of meat cattle: ", cba_rs_fp[0])
 
-cba_rs_fp_eu=cba_rs[0:27,42:53].sum(0) 
+cba_rs_fp_eu=cba_rs[0:27,42:53].sum(0)
 cba_rs_fp_uk=cba_rs[27,42:53]
-cba_rs_fp_rw=cba_rs[28:49,42:53].sum(0) 
+cba_rs_fp_rw=cba_rs[28:49,42:53].sum(0)
 
 lab1=['UK','EU', 'Rest of the World']
 lab2= label_s[42:53]
@@ -572,18 +572,18 @@ print("Water Plot 2: ")
 fig, ax = plt.subplots(figsize=(10,10))
 
 temp= np.zeros(11)
-for j in range(3):                                      
+for j in range(3):
     plt.bar([1,2,3,4,5,6,7,8,9,10,11], tot[:,j], bottom = temp, label=lab1[j])
     temp = temp + tot[:,j]
 
-plt.legend(loc = "upper left")                          # Lable the plot (check tutorial link above)                 
+plt.legend(loc = "upper left")                          # Lable the plot (check tutorial link above)
 plt.title('Embodied water consumption in UK processed agricutltural products before Treaty (2020, Mm3)')
 plt.xticks(np.arange(1,12))
 plt.setp(ax.get_xticklabels(), rotation=30, horizontalalignment='right')
 ax.set_xticklabels(lab2)
 
 plt.rc('font', size=10)          # controls default text sizes
-plt.rc('axes', titlesize=10) 
+plt.rc('axes', titlesize=10)
 
 plt.savefig('water_consumption_UKEURW_processed2020_before_treaty.svg',bbox_inches='tight',pad_inches = 0)
 plt.show()
@@ -628,20 +628,20 @@ else :
 
 
 
-#You can see that adding the three first numbers printed gives you the last one: 
+#You can see that adding the three first numbers printed gives you the last one:
 #so no change in the consumption patterns of the world
 
 #%% Plot Embodied water consumption in UK processed agricutltural products after Treaty (2020, Mm3)
 
-cba_rs_fp= cba_rs[:,42:53].sum(0) 
+cba_rs_fp= cba_rs[:,42:53].sum(0)
 print()
 print("Total CBA water consumption: ", cba_rs.sum())
 print("Total CBA water consumption of processed food products: ", cba_rs_fp.sum())
 print("CBA water consumption of products of meat cattle: ", cba_rs_fp[0])
 
-cba_rs_fp_eu=cba_rs[0:27,42:53].sum(0) 
+cba_rs_fp_eu=cba_rs[0:27,42:53].sum(0)
 cba_rs_fp_uk=cba_rs[27,42:53]
-cba_rs_fp_rw=cba_rs[28:49,42:53].sum(0) 
+cba_rs_fp_rw=cba_rs[28:49,42:53].sum(0)
 
 lab1=['UK','EU', 'Rest of the World']
 lab2= label_s[42:53]
@@ -659,18 +659,18 @@ fig, ax = plt.subplots(figsize=(10,10))
 
 
 temp= np.zeros(11)
-for j in range(3):                                      
+for j in range(3):
     plt.bar([1,2,3,4,5,6,7,8,9,10,11], tot[:,j], bottom = temp, label=lab1[j])
     temp = temp + tot[:,j]
 
-plt.legend(loc = "upper left")                          # Lable the plot (check tutorial link above)                 
+plt.legend(loc = "upper left")                          # Lable the plot (check tutorial link above)
 plt.title('Embodied water consumption in UK processed agricutltural products after Treaty (2020, Mm3)')
 plt.xticks(np.arange(1,12))
 plt.setp(ax.get_xticklabels(), rotation=30, horizontalalignment='right')
 ax.set_xticklabels(lab2)
 
 plt.rc('font', size=10)          # controls default text sizes
-plt.rc('axes', titlesize=10) 
+plt.rc('axes', titlesize=10)
 
 plt.savefig('water_consumption_UKEURW_processed2020_after_treaty.svg',bbox_inches='tight',pad_inches = 0)
 plt.show()
@@ -687,7 +687,7 @@ print("Water Plot 4: ")
 fig, ax = plt.subplots(figsize=(10,10))
 temp= np.zeros(2)
 
-for j in range(3):                                      
+for j in range(3):
     plt.bar([1,2], prod_cattle[:,j], bottom = temp, label=lab1[j])
     temp = temp + prod_cattle[:,j]
 
@@ -697,9 +697,9 @@ plt.setp(ax.get_xticklabels(), horizontalalignment='right')
 ax.set_xticklabels(lab3,fontsize=15)
 plt.title('Consumption-based water consumption in UK for products of meat cattle before and after the Treaty (2020, Mm3)')
 plt.rc('font', size=10)          # controls default text sizes
-plt.rc('axes', titlesize=10) 
+plt.rc('axes', titlesize=10)
 plt.ylim(0,1200)
-plt.legend(loc = "upper left")  
+plt.legend(loc = "upper left")
 
 for rect in ax.patches:
     # Find where everything is located
@@ -707,9 +707,9 @@ for rect in ax.patches:
     width = rect.get_width()
     xx = rect.get_x()
     yy = rect.get_y()
-    
+
     label_text = height
-    
+
     # ax.text(x, y, text)
     label_x = xx+ width / 2
     label_y = yy + height / 2
@@ -719,5 +719,3 @@ for rect in ax.patches:
 plt.show()
 
 plt.close()
-
-
